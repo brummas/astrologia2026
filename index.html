@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrologia — Agenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blush-0:#fff8fb;
+    --pink-50:#fdeef4;
+    --pink-100:#fbdfeb;
+    --pink-150:#f9d0e2;
+    --pink-200:#f5bcd6;
+    --pink-300:#efa0c6;
+    --pink-400:#e685b3;
+    --pink-500:#da689d;
+    --pink-600:#c14f83;
+    --pink-700:#9c3c68;
+    --ink:#5b3040;
+    --ink-soft:#9c6d80;
+    --ink-faint:#cfa3b7;
+    --white:#ffffff;
+    --radius-lg:28px;
+    --radius-md:18px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  .wrap{
+    font-family:'Quicksand',sans-serif;
+    background:#ffffff;
+    color:var(--ink);
+    padding:24px 16px 32px;
+    display:flex;
+    justify-content:center;
+    min-height:100%;
+  }
+  .card{
+    width:100%;
+    max-width:960px;
+    background:var(--white);
+    border-radius:var(--radius-lg);
+    padding:clamp(14px,2.5vw,28px);
+    position:relative;
+  }
+  .card::before{
+    display:none;
+  }
+  .header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:6px;
+    position:relative;
+  }
+  .month-title{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:26px;
+    letter-spacing:.2px;
+    color:var(--ink);
+    text-align:center;
+    flex:1;
+    text-transform:capitalize;
+  }
+  .month-title small{
+    display:block;
+    font-family:'Quicksand',sans-serif;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:2.5px;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    margin-top:2px;
+  }
+  .nav-btn{
+    width:clamp(30px,4vw,38px);
+    height:clamp(30px,4vw,38px);
+    border-radius:50%;
+    border:1px solid var(--pink-150);
+    background:var(--white);
+    color:var(--pink-600);
+    font-size:clamp(14px,2vw,17px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:background .15s ease, transform .1s ease;
+    flex-shrink:0;
+  }
+  .nav-btn:hover{background:var(--pink-100);}
+  .nav-btn:active{transform:scale(.92);}
+  .weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    margin-top:16px;
+    margin-bottom:6px;
+  }
+  .weekdays span{
+    text-align:center;
+    font-size:clamp(9px,1.6vw,11px);
+    font-weight:700;
+    letter-spacing:1px;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+  }
+  .days{
+    display:grid;
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:clamp(3px,0.8vw,7px);
+  }
+  .day{
+    position:relative;
+    min-height:clamp(56px,11vw,100px);
+    border-radius:12px;
+    border:1px solid var(--pink-150);
+    padding:clamp(4px,1vw,7px);
+    display:flex;
+    flex-direction:column;
+    background:var(--white);
+    transition:background .15s ease;
+  }
+  .day.pad{visibility:hidden; border-color:transparent;}
+  .day-num{
+    font-size:clamp(10px,1.8vw,13px);
+    font-weight:700;
+    color:var(--ink-soft);
+    line-height:1;
+    margin-bottom:4px;
+    display:flex;
+    align-items:center;
+    gap:5px;
+  }
+  .day.today{
+    background:var(--pink-150);
+    border-color:var(--pink-400);
+  }
+  .day.today .day-num{color:var(--pink-700);}
+  .today-tag{
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:.4px;
+    color:var(--white);
+    background:var(--pink-500);
+    padding:1px 5px;
+    border-radius:7px;
+    text-transform:uppercase;
+  }
+  .holiday-badge{
+    display:inline-block;
+    font-size:clamp(7.5px,1.3vw,9px);
+    font-weight:700;
+    letter-spacing:.3px;
+    color:var(--white);
+    background:var(--pink-500);
+    padding:2px 6px;
+    border-radius:8px;
+    margin-bottom:4px;
+    line-height:1.3;
+    align-self:flex-start;
+  }
+  .event-chip{
+    font-size:clamp(8.5px,1.5vw,10.5px);
+    line-height:1.35;
+    color:var(--ink);
+    background:var(--pink-100);
+    border-radius:7px;
+    padding:2px 6px;
+    margin-top:3px;
+    overflow-wrap:break-word;
+  }
+  .event-chip .t{
+    color:var(--pink-700);
+    font-weight:700;
+    margin-right:4px;
+  }
+  .loading{
+    text-align:center;
+    padding:30px 0;
+    color:var(--ink-faint);
+    font-size:13px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <button class="nav-btn" id="prevBtn" aria-label="Mês anterior">‹</button>
+      <h1 class="month-title" id="monthTitle"><small id="yearLabel"></small><span id="monthLabel"></span></h1>
+      <button class="nav-btn" id="nextBtn" aria-label="Próximo mês">›</button>
+    </div>
+    <div class="weekdays">
+      <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+    </div>
+    <div class="days" id="daysGrid">
+      <div class="loading">carregando estrelas…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ICS_URL = 'astrologia.ics';
+const TZ = 'America/Sao_Paulo';
+const MONTHS = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+let events = [];
+let current = new Date();
+
+function easterDate(year){
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19*a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2*e + 2*i - h - k) % 7;
+  const m = Math.floor((a + 11*h + 22*l) / 451);
+  const month = Math.floor((h + l - 7*m + 114) / 31);
+  const day = ((h + l - 7*m + 114) % 31) + 1;
+  return new Date(Date.UTC(year, month-1, day));
+}
+
+function addDays(date, n){
+  const d = new Date(date);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d;
+}
+
+function holidaysForYear(year){
+  const easter = easterDate(year);
+  const list = [
+    { date: new Date(Date.UTC(year,0,1)), name: 'Ano novo' },
+    { date: addDays(easter,-48), name: 'Carnaval' },
+    { date: addDays(easter,-47), name: 'Carnaval' },
+    { date: addDays(easter,-2), name: 'Sexta-feira santa' },
+    { date: addDays(easter,60), name: 'Corpus Christi' },
+    { date: new Date(Date.UTC(year,3,21)), name: 'Tiradentes' },
+    { date: new Date(Date.UTC(year,4,1)), name: 'Dia do trabalho' },
+    { date: new Date(Date.UTC(year,8,7)), name: 'Independência' },
+    { date: new Date(Date.UTC(year,9,12)), name: 'N. Sra. Aparecida' },
+    { date: new Date(Date.UTC(year,10,2)), name: 'Finados' },
+    { date: new Date(Date.UTC(year,10,15)), name: 'Proclam. da república' },
+    { date: new Date(Date.UTC(year,10,20)), name: 'Consciência negra' },
+    { date: new Date(Date.UTC(year,11,25)), name: 'Natal' },
+  ];
+  const byKey = {};
+  for(const h of list){
+    const key = dayKey(h.date.getUTCFullYear(), h.date.getUTCMonth()+1, h.date.getUTCDate());
+    byKey[key] = h.name;
+  }
+  return byKey;
+}
+
+const holidayCache = {};
+function getHolidays(year){
+  if(!holidayCache[year]) holidayCache[year] = holidaysForYear(year);
+  return holidayCache[year];
+}
+
+function parseICS(text){
+  const lines = text.split(/\r\n|\n|\r/);
+  const out = [];
+  let ev = null;
+  for(const raw of lines){
+    if(raw === 'BEGIN:VEVENT'){ ev = {}; continue; }
+    if(raw === 'END:VEVENT'){ if(ev && ev.dtstart) out.push(ev); ev = null; continue; }
+    if(!ev) continue;
+    const idx = raw.indexOf(':');
+    if(idx === -1) continue;
+    let key = raw.slice(0, idx);
+    const value = raw.slice(idx + 1);
+    key = key.split(';')[0];
+    if(key === 'DTSTART'){
+      ev.dtstart = parseICSDate(value);
+    } else if(key === 'SUMMARY'){
+      ev.summary = value.replace(/\\,/g, ',').replace(/\\n/gi, ' ');
+    }
+  }
+  return out;
+}
+
+function parseICSDate(v){
+  if(/^\d{8}$/.test(v)){
+    const y = +v.slice(0,4), m = +v.slice(4,6), d = +v.slice(6,8);
+    return new Date(Date.UTC(y, m-1, d));
+  }
+  const y = +v.slice(0,4), m = +v.slice(4,6), d = +v.slice(6,8);
+  const h = +v.slice(9,11), mi = +v.slice(11,13), s = +v.slice(13,15) || 0;
+  return new Date(Date.UTC(y, m-1, d, h, mi, s));
+}
+
+function localParts(date){
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: TZ, year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', hour12:false
+  });
+  const parts = {};
+  fmt.formatToParts(date).forEach(p => parts[p.type] = p.value);
+  return { y:+parts.year, m:+parts.month, d:+parts.day, hh:parts.hour, mm:parts.minute };
+}
+
+function dayKey(y,m,d){ return y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+
+let eventsByDay = {};
+
+function indexEvents(){
+  eventsByDay = {};
+  for(const ev of events){
+    const p = localParts(ev.dtstart);
+    const key = dayKey(p.y, p.m, p.d);
+    if(!eventsByDay[key]) eventsByDay[key] = [];
+    eventsByDay[key].push({ time: p.hh+':'+p.mm, summary: ev.summary || '' });
+  }
+  for(const k in eventsByDay){
+    eventsByDay[k].sort((a,b) => a.time.localeCompare(b.time));
+  }
+}
+
+function render(){
+  const y = current.getFullYear();
+  const m = current.getMonth();
+  document.getElementById('monthLabel').textContent = MONTHS[m];
+  document.getElementById('yearLabel').textContent = y;
+
+  const firstDow = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+
+  const todayParts = localParts(new Date());
+  const todayKey = dayKey(todayParts.y, todayParts.m, todayParts.d);
+
+  const grid = document.getElementById('daysGrid');
+  grid.innerHTML = '';
+
+  for(let i=0;i<firstDow;i++){
+    const pad = document.createElement('div');
+    pad.className = 'day pad';
+    grid.appendChild(pad);
+  }
+
+  const holidays = getHolidays(y);
+
+  for(let d=1; d<=daysInMonth; d++){
+    const key = dayKey(y, m+1, d);
+    const cell = document.createElement('div');
+    cell.className = 'day';
+    if(key === todayKey) cell.classList.add('today');
+
+    const num = document.createElement('div');
+    num.className = 'day-num';
+    num.innerHTML = '<span>'+d+'</span>' + (key === todayKey ? '<span class="today-tag">hoje</span>' : '');
+    cell.appendChild(num);
+
+    const holidayName = holidays[key];
+    if(holidayName){
+      const badge = document.createElement('span');
+      badge.className = 'holiday-badge';
+      badge.textContent = holidayName;
+      cell.appendChild(badge);
+    }
+
+    const list = eventsByDay[key];
+    if(list){
+      for(const e of list){
+        const chip = document.createElement('div');
+        chip.className = 'event-chip';
+        chip.innerHTML = '<span class="t">'+e.time+'</span>' + escapeHtml(e.summary);
+        cell.appendChild(chip);
+      }
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  current = new Date(current.getFullYear(), current.getMonth()-1, 1);
+  render();
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  current = new Date(current.getFullYear(), current.getMonth()+1, 1);
+  render();
+});
+
+
+fetch(ICS_URL)
+  .then(r => {
+    if(!r.ok) throw new Error('não foi possível carregar ' + ICS_URL);
+    return r.text();
+  })
+  .then(text => {
+    events = parseICS(text);
+    indexEvents();
+    render();
+  })
+  .catch(err => {
+    document.getElementById('daysGrid').innerHTML =
+      '<div class="loading">não consegui carregar o arquivo astrologia.ics — confira se ele está na mesma pasta do index.html</div>';
+    console.error(err);
+  });
+</script>
+</body>
+</html>
