@@ -38,6 +38,7 @@ html,body{margin:0; width:100%; overflow-x:hidden;}
     justify-content:center;
     min-height:100%;
     width:100%;
+    container-type: inline-size;
   }
   .card{
     width:100%;
@@ -45,7 +46,7 @@ html,body{margin:0; width:100%; overflow-x:hidden;}
     background:var(--white);
     border:1.5px solid var(--pink-200);
     border-radius:var(--radius-lg);
-    padding:clamp(8px,1.5vw,18px);
+    padding:clamp(8px,1.5cqw,18px);
     position:relative;
   }
   .card::before{
@@ -79,13 +80,13 @@ html,body{margin:0; width:100%; overflow-x:hidden;}
     margin-top:2px;
   }
   .nav-btn{
-    width:clamp(30px,4vw,38px);
-    height:clamp(30px,4vw,38px);
+    width:clamp(30px,4cqw,38px);
+    height:clamp(30px,4cqw,38px);
     border-radius:50%;
     border:1px solid var(--pink-150);
     background:var(--white);
     color:var(--pink-600);
-    font-size:clamp(14px,2vw,17px);
+    font-size:clamp(14px,2cqw,17px);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -103,7 +104,7 @@ html,body{margin:0; width:100%; overflow-x:hidden;}
   }
   .weekdays span{
     text-align:center;
-    font-size:clamp(9px,1.6vw,11px);
+    font-size:clamp(9px,1.6cqw,11px);
     font-weight:700;
     letter-spacing:1px;
     color:var(--ink-faint);
@@ -112,14 +113,14 @@ html,body{margin:0; width:100%; overflow-x:hidden;}
   .days{
     display:grid;
     grid-template-columns:repeat(7,minmax(0,1fr));
-    gap:clamp(3px,0.8vw,7px);
+    gap:clamp(3px,0.8cqw,7px);
   }
   .day{
     position:relative;
-    min-height:clamp(40px,3vw,60px);
+    min-height:clamp(40px,3cqw,60px);
     border-radius:12px;
     border:1px solid var(--pink-150);
-    padding:clamp(4px,1vw,7px);
+    padding:clamp(4px,1cqw,7px);
     display:flex;
     flex-direction:column;
     background:var(--white);
@@ -127,7 +128,7 @@ html,body{margin:0; width:100%; overflow-x:hidden;}
   }
   .day.pad{visibility:hidden; border-color:transparent;}
   .day-num{
-    font-size:clamp(10px,1.8vw,13px);
+    font-size:clamp(10px,1.8cqw,13px);
     font-weight:700;
     color:var(--ink-soft);
     line-height:1;
@@ -143,7 +144,7 @@ html,body{margin:0; width:100%; overflow-x:hidden;}
   }
   .chip{
     display:block;
-    font-size:clamp(8.5px,1.5vw,10.5px);
+    font-size:clamp(8.5px,1.5cqw,10.5px);
     line-height:1.4;
     font-weight:700;
     letter-spacing:.2px;
