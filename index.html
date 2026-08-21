@@ -28,7 +28,7 @@
     --radius-sm:12px;
   }
   *{box-sizing:border-box;}
-  body{margin:0;}
+html,body{margin:0; width:100%; overflow-x:hidden;}
   .wrap{
     font-family:'Quicksand',sans-serif;
     background:#ffffff;
@@ -37,10 +37,11 @@
     display:flex;
     justify-content:center;
     min-height:100%;
+    width:100%;
   }
   .card{
     width:100%;
-    max-width:960px;
+    max-width:none;
     background:var(--white);
     border:1.5px solid var(--pink-200);
     border-radius:var(--radius-lg);
